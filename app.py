@@ -20,8 +20,14 @@ app.config.suppress_callback_exceptions = True
 
 
 # Load data from csv
-def load_data():
-    # To do: Completar la funciÃ³n 
+def load_data(filepath='datos_energia.csv'):
+    # To do: Completar la funcion
+    df = pd.read_csv(filepath)
+
+    df['time'] = pd.to_datetime(df['time'])
+    df.set_index('time', inplace=True)
+
+    return df
     
 
 # Cargar datos
@@ -33,14 +39,14 @@ def plot_series(data, initial_date, proy):
     data_plot = data_plot[:-(120-proy)]
     fig = go.Figure([
         go.Scatter(
-            name='Demanda energÃ©tica',
+            name='Demanda energética',
             x=data_plot.index,
             y=data_plot['AT_load_actual_entsoe_transparency'],
             mode='lines',
             line=dict(color="#188463"),
         ),
         go.Scatter(
-            name='ProyecciÃ³n',
+            name='Proyección',
             x=data_plot.index,
             y=data_plot['forecast'],
             mode='lines',
@@ -98,10 +104,10 @@ def description_card():
         id="description-card",
         children=[
             #html.H5("Proyecto 1"),
-            html.H3("PronÃ³stico de producciÃ³n energÃ©tica"),
+            html.H3("Pronóstico de producción energética"),
             html.Div(
                 id="intro",
-                children="Esta herramienta contiene informaciÃ³n sobre la demanda energÃ©tica total en Austria cada hora segÃºn lo pÃºblicado en ENTSO-E Data Portal. Adicionalmente, permite realizar pronÃ³sticos hasta 5 dias en el futuro."
+                children="Esta herramienta contiene información sobre la demanda energÃ©tica total en Austria cada hora según lo publicado en ENTSO-E Data Portal. Adicionalmente, permite realizar pronósticos hasta 5 dias en el futuro."
             ),
         ],
     )
@@ -203,7 +209,7 @@ app.layout = html.Div(
                 html.Div(
                     id="model_graph",
                     children=[
-                        html.B("Demanda energÃ©tica total en Austria [MW]"),
+                        html.B("Demanda energética total en Austria [MW]"),
                         html.Hr(),
                         dcc.Graph(
                             id="plot_series",  
@@ -240,4 +246,5 @@ def update_output_div(date, hour, proy):
 
 # Run the server
 if __name__ == "__main__":
-    app.run_server(debug=True)
+    # app.run_server(debug=True)
+    app.run(debug=True)
